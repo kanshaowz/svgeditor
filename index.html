@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVGEditor - SVG编辑器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg viewBox="0 0 40 40" class="logo-icon">
+                    <circle cx="20" cy="20" r="18" fill="#FF8C42"/>
+                    <path d="M12 20 L20 12 L28 20 L20 28 Z" fill="white"/>
+                    <circle cx="20" cy="20" r="5" fill="#FF8C42"/>
+                </svg>
+                <h1>SVGEditor</h1>
+            </div>
+            <div class="header-actions">
+                <select id="languageSelect" class="language-select">
+                    <option value="zh">中文</option>
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
+                </select>
+                <button id="downloadBtn" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                        <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                    </svg>
+                    <span data-i18n="download">下载</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-section">
+                <span class="toolbar-label" data-i18n="shapes">形状</span>
+                <div class="shape-buttons">
+                    <button class="shape-btn" data-shape="rect" title="矩形">
+                        <svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                    <button class="shape-btn" data-shape="circle" title="圆形">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                    <button class="shape-btn" data-shape="ellipse" title="椭圆">
+                        <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                    <button class="shape-btn" data-shape="line" title="直线">
+                        <svg viewBox="0 0 24 24"><line x1="4" y1="20" x2="20" y2="4" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                    <button class="shape-btn" data-shape="polygon" title="多边形">
+                        <svg viewBox="0 0 24 24"><polygon points="12,4 20,10 17,20 7,20 4,10" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                    <button class="shape-btn" data-shape="path" title="路径">
+                        <svg viewBox="0 0 24 24"><path d="M4 12 Q8 4 12 12 T20 12" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                    <button class="shape-btn" data-shape="text" title="文字">
+                        <svg viewBox="0 0 24 24"><text x="6" y="17" fill="currentColor" font-size="14" font-weight="bold">T</text></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-section">
+                <span class="toolbar-label" data-i18n="actions">操作</span>
+                <div class="action-buttons">
+                    <button id="clearBtn" class="action-btn" title="清空">
+                        <svg viewBox="0 0 24 24" width="18" height="18">
+                            <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                    </button>
+                    <button id="undoBtn" class="action-btn" title="撤销">
+                        <svg viewBox="0 0 24 24" width="18" height="18">
+                            <path fill="currentColor" d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
+                        </svg>
+                    </button>
+                    <button id="formatBtn" class="action-btn" title="格式化">
+                        <svg viewBox="0 0 24 24" width="18" height="18">
+                            <path fill="currentColor" d="M3 21h18v-2H3v2zm6-4h12v-2H9v2zm-6-4h18v-2H3v2zm6-4h12V7H9v2zM3 3v2h18V3H3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-section">
+                <span class="toolbar-label" data-i18n="view">视图</span>
+                <div class="view-controls">
+                    <button id="gridBtn" class="toggle-btn active" data-i18n="grid">网格</button>
+                    <input type="color" id="bgColor" value="#ffffff" title="背景色">
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Code Editor -->
+            <div class="editor-panel">
+                <div class="panel-header">
+                    <span class="panel-title" data-i18n="code">代码</span>
+                    <div class="panel-actions">
+                        <span class="code-status" id="codeStatus"></span>
+                    </div>
+                </div>
+                <div class="editor-container">
+                    <textarea id="codeEditor" spellcheck="false" placeholder="在此输入 SVG 代码..."></textarea>
+                </div>
+            </div>
+
+            <!-- Preview -->
+            <div class="preview-panel">
+                <div class="panel-header">
+                    <span class="panel-title" data-i18n="preview">预览</span>
+                    <div class="panel-actions">
+                        <span id="dimensions">400 x 300</span>
+                    </div>
+                </div>
+                <div class="preview-container" id="previewContainer">
+                    <div class="grid-overlay" id="gridOverlay"></div>
+                    <div id="preview" class="preview-area"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Templates Panel -->
+        <div class="templates-panel">
+            <span class="templates-label" data-i18n="templates">模板</span>
+            <div class="templates-grid">
+                <button class="template-btn" data-template="star">
+                    <svg viewBox="0 0 50 50"><polygon points="25,5 30,20 45,20 33,30 38,45 25,35 12,45 17,30 5,20 20,20" fill="#FF8C42"/></svg>
+                    <span data-i18n="star">星形</span>
+                </button>
+                <button class="template-btn" data-template="heart">
+                    <svg viewBox="0 0 50 50"><path d="M25 45 L10 30 C5 25 5 15 12 10 C19 5 25 12 25 12 C25 12 31 5 38 10 C45 15 45 25 40 30 Z" fill="#FF6B6B"/></svg>
+                    <span data-i18n="heart">心形</span>
+                </button>
+                <button class="template-btn" data-template="arrow">
+                    <svg viewBox="0 0 50 50"><path d="M10 20 L30 20 L30 10 L45 25 L30 40 L30 30 L10 30 Z" fill="#4ECDC4"/></svg>
+                    <span data-i18n="arrow">箭头</span>
+                </button>
+                <button class="template-btn" data-template="cloud">
+                    <svg viewBox="0 0 50 50"><path d="M10 30 Q10 20 20 20 Q20 10 30 10 Q40 10 40 20 Q45 20 45 30 Q45 40 35 40 L15 40 Q5 40 10 30" fill="#95E1D3"/></svg>
+                    <span data-i18n="cloud">云朵</span>
+                </button>
+                <button class="template-btn" data-template="bolt">
+                    <svg viewBox="0 0 50 50"><path d="M28 5 L18 22 L28 22 L22 45 L35 25 L25 25 Z" fill="#FFD93D"/></svg>
+                    <span data-i18n="bolt">闪电</span>
+                </button>
+                <button class="template-btn" data-template="moon">
+                    <svg viewBox="0 0 50 50"><path d="M20 5 Q35 5 35 25 Q35 45 20 45 Q30 35 30 25 Q30 15 20 5" fill="#6C5CE7"/></svg>
+                    <span data-i18n="moon">月亮</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>SVGEditor &copy; 2026 | <span data-i18n="tagline">让创意自由飞翔</span></p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
