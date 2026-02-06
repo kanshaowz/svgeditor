@@ -25,6 +25,30 @@
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Dark Mode */
+.dark-mode {
+    --primary: #FF8C42;
+    --primary-dark: #FFB088;
+    --primary-light: #FFE5D9;
+    --secondary: #FF8C42;
+    --accent: #FFD93D;
+    --success: #4ECDC4;
+    --bg-primary: #1a1512;
+    --bg-secondary: #2d2420;
+    --bg-tertiary: #3d3029;
+    --text-primary: #FFF8F3;
+    --text-secondary: #FFB088;
+    --text-muted: #8B7355;
+    --border: #3d3029;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode body {
+    background: var(--bg-primary);
+}
+
 * {
     margin: 0;
     padding: 0;

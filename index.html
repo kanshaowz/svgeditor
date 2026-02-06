@@ -20,6 +20,7 @@
                 <h1>SVGEditor</h1>
             </div>
             <div class="header-actions">
+                <button id="darkModeBtn" onclick="toggleDarkMode()" title="切换主题" style="font-size: 20px; background: rgba(255,255,255,0.2); border: none; border-radius: 8px; cursor: pointer; padding: 8px 12px; color: white;">🌙</button>
                 <select id="languageSelect" class="language-select">
                     <option value="zh">中文</option>
                     <option value="en">English</option>
@@ -163,5 +164,32 @@
     </div>
 
     <script src="app.js"></script>
+    <script>
+        // Dark Mode
+        const STORAGE_KEY = 'svgeditor-theme';
+        const DARK_CLASS = 'dark-mode';
+
+        function initDarkMode() {
+            const savedTheme = localStorage.getItem(STORAGE_KEY);
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add(DARK_CLASS);
+                updateDarkModeIcon(true);
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle(DARK_CLASS);
+            localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
+            updateDarkModeIcon(isDark);
+        }
+
+        function updateDarkModeIcon(isDark) {
+            const btn = document.getElementById('darkModeBtn');
+            if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+        }
+
+        initDarkMode();
+    </script>
 </body>
 </html>
